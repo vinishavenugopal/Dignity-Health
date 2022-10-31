@@ -1,0 +1,35 @@
+```{r}
+library(dplyr)
+library(tidyverse)
+library(stringr)
+library(readxl)
+library(xlsx)
+```
+##Reading data from NYGC document(available both in local and server)
+```{r}
+metadata_2022<-read.xlsx("C:/Users/Vinisha/Documents/NYGC/2022/ALS_Conosortium_RNAseq_Metadata_07192022.xlsx",1,header=TRUE,stringsAsFactors = TRUE, check.names = FALSE)
+metadata_2021<-read.xlsx("C:/Users/Vinisha/Documents/NYGC/2021/Target_ALS_RNA_Metadata_200122.xlsx",1,header=TRUE,stringsAsFactors = TRUE, check.names = FALSE)
+```
+
+```{r}
+unique(metadata_2021$`Sample Source`)
+```
+
+```{r}
+metadata_2022<-metadata_2022 %>%
+  filter(`Sample Source`=="Choroid")
+metadata_2021<-metadata_2021 %>%
+  filter(`Sample Source` %in% c("Choroid"))
+```
+
+```{r}
+files_needed<-anti_join(metadata_2022,metadata_2021,by="ExternalSampleId")
+files<- files_needed %>%
+            dplyr::select("Quote","ExternalSampleId")
+print(files)
+```
+
+```{r}
+files<-write.csv(files,"C:/Users/Vinisha/Documents/NYGC/2022/files_needed.csv", row.names=FALSE)
+```
+

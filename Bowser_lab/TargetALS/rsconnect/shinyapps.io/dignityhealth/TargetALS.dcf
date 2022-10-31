@@ -1,0 +1,13 @@
+name: TargetALS
+title: TargetALS
+username:
+account: dignityhealth
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 7477092
+bundleId: 6460788
+url: https://dignityhealth.shinyapps.io/TargetALS/
+when: 1667249090.52782
+lastSyncTime: 1667249090.52782
+asMultiple: FALSE
+asStatic: FALSE
