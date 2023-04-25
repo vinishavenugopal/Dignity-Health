@@ -22,17 +22,17 @@ library(shiny)
 library(shinydashboard)
 library(ggiraph)
 
-real_data_both <-c(2,2,1,1,2,2,1,2,2,2,3,
-                   2,0,0,0,0,0,0,1,3,7,2)
+real_data_both <-c(2,2,1,1,2,2,1,2,2,2,4,3,2,1,3,3,1,0,0,1,2,1,
+                   2,0,0,0,0,0,0,1,3,7,2,3,1,0,2,2,3,0,2,3,0,1)
 
-real_data<-as.data.frame(matrix(real_data_both,11,2,byrow=FALSE))
+real_data<-as.data.frame(matrix(real_data_both,22,2,byrow=FALSE))
 colnames(real_data)<-c("ALS","Control")
-real_data$Dates = seq(as.Date("07-01-2021",  format = "%m-%d-%Y"), length.out = 11, by = "month")
+real_data$Dates = seq(as.Date("07-01-2021",  format = "%m-%d-%Y"), length.out = 22, by = "month")
 real_data$total<-real_data$ALS+real_data$Control
 rd<-pivot_longer(real_data,cols=c(1,2,4),names_to = "Group",values_to = "nos")
 
 real_data_T = as.data.frame(t(real_data))
-colnames(real_data_T)<-seq(1,11,by=1)
+colnames(real_data_T)<-seq(1,22,by=1)
 
 Dates=seq(as.Date("01-07-2021",  format = "%d-%m-%Y"), length.out = 36, by = "month")
 
@@ -61,8 +61,8 @@ ui <- fluidPage(
         tabPanel("Predicted graph - Visits",
                  h6("The prediction curve is based on the current data and minimum annual enrollment"),
                  strong("Assumptions for the prediction:"),
-                 h6("1.Minimum annual enrollment for consecutive years to be 50,110,180 for ALS"),
-                 h6("2.Minimum annual enrollment for consecutive years to be 20,45,75 for Controls"),
+                 h6("1.Minimum annual enrollment for consecutive years(June 2023,June 2024) to be 110,180 for ALS"),
+                 h6("2.Minimum annual enrollment for consecutive years(June 2023,June 2024) to be 45,75 for Controls"),
                  strong("Subjects enrolled and total number of visits"),
                  ggiraphOutput("Predicted_samples3"),
                  strong("Visit details:"),
@@ -115,13 +115,13 @@ server <- function(input,output){
   
   final_data = reactive({
     pred_data <- data_nos()
-    for(i in 1:11) pred_data$sum[i]<-n_subjects(i)
+    for(i in 1:22) pred_data$sum[i]<-n_subjects(i)
     if(!!input$group=="ALS"){
-      pred_data[12,]<-c(0,50)
+      #pred_data[12,]<-c(0,50)
       pred_data[24,]<-c(0,110)
       pred_data[36,]<-c(0,180)
     }else {
-      pred_data[12,]<-c(0,20)
+      #pred_data[12,]<-c(0,20)
       pred_data[24,]<-c(0,45)
       pred_data[36,]<-c(0,75)
     }
@@ -316,6 +316,7 @@ server <- function(input,output){
               options = list(searching = FALSE, pageLength = 15, lengthChange = FALSE),
               rownames= FALSE)
   )
+  
   
   output$NOS_barplot <- renderUI({
     if(input$time=="Month"){
